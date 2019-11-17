@@ -9,7 +9,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +45,6 @@ public class Board {
         fillBoardCells();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                boardCells[x][y].setText(boardCells[x][y].getAbcNumPos());
                 deskPane.add(boardCells[x][y], y, x);
             }
         }
@@ -60,6 +58,7 @@ public class Board {
                 String numPos = String.valueOf(size - x);
                 Cell nextCell = new Cell(abcPos, numPos, new int[] {x, y});
                 boardCells[x][y] = nextCell;
+                nextCell.setArrayPos(new int[] {x, y});
             }
         }
     }
@@ -121,5 +120,13 @@ public class Board {
 
     public int getBoardSize() {
         return boardSize;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }
