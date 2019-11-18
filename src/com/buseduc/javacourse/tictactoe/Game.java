@@ -3,14 +3,14 @@ package com.buseduc.javacourse.tictactoe;
 import com.buseduc.javacourse.tictactoe.artifacts.Board;
 
 import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.List;
+
+
 
 public class Game {
     public static void main(String[] args) {
         Board gameBoard = new Board();
         String cell = getCell();
-        gameBoard.setChip(cell);
+        gameBoard.move(cell);
         gameBoard.render();
     }
         public static String getCell(){
