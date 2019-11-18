@@ -2,8 +2,6 @@ package com.buseduc.javacourse.tictactoe;
 
 import com.buseduc.javacourse.tictactoe.artifacts.Board;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Game {
@@ -11,7 +9,7 @@ public class Game {
 
         Board gameBoard = new Board();
         String cell = getCell();
-        gameBoard.setChip(cell);
+        gameBoard.move(cell);
         gameBoard.render();
 
         
