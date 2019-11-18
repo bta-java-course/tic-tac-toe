@@ -1,4 +1,5 @@
-package com.buseduc.javacourse.tictactoe.artifacts.Core;
+package com.buseduc.javacourse.tictactoe.artifacts.core;
 
 public class GameState {
+
 }
