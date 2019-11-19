@@ -132,16 +132,17 @@ public class GameState {
 
     //Checks whether line is already exists in dead heat list
     private boolean deadHeatListContains(List<Cell> line) {
+        List<Boolean> outList = new ArrayList<>();
         for (List<Cell> list : deadHeats) {
-            List<Boolean> outComeList = new ArrayList<>();
+            List<Boolean> inList = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
-                outComeList.add(Arrays.equals(list.get(i).getArrayPos(), line.get(i).getArrayPos()));
+                inList.add(Arrays.equals(list.get(i).getArrayPos(), line.get(i).getArrayPos()));
             }
-            if (outComeList.stream().allMatch(c -> c.equals(true))) {
-                return true;
-            }
+            if (inList.stream().allMatch(c -> c.equals(true))) {
+                outList.add(true);
+            } else outList.add(false);
         }
-        return false;
+        return outList.contains(true);
     }
 
     //Checks whether dead heat list contains only needed chips

@@ -47,6 +47,7 @@ public class Board {
         GridPane deskPane = initDeskPane();
         outerPane.add(deskPane, 1, 1, size, size);
         fillBoardCells();
+        Computer.getInstance().fillWinLines();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
                 deskPane.add(boardCells[x][y], y, x);

@@ -6,8 +6,8 @@ public class Game {
 
     private static Board board;
     private static GameState gameState;
-    private static int winLine = 4;
-    private static int boardSize = 4;
+    private static int winLine = 2;
+    private static int boardSize = 10;
 
     static {
         board = new Board(boardSize);
@@ -33,4 +33,11 @@ public class Game {
         return gameState;
     }
 
+    public static int getWinLine() {
+        return winLine;
+    }
+
+    public static int getBoardSize() {
+        return boardSize;
+    }
 }
