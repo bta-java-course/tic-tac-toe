@@ -2,7 +2,9 @@ package com.buseduc.javacourse.tictactoe;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class RenderFX extends Application {
 
@@ -18,10 +20,12 @@ public class RenderFX extends Application {
     @Override
     public void start(Stage primaryStage) {
         Stage primary = primaryStage;
-        primary.setWidth(board.getBoardSize());
-        primary.setHeight(board.getBoardSize());
+        primary.initStyle(StageStyle.TRANSPARENT);
+        primary.setResizable(false);
         primary.setTitle("XO - Gomoku");
-        primary.setScene(new Scene(board.render()));
+        Scene scene = new Scene(board.render());
+        scene.setFill(Color.TRANSPARENT);
+        primary.setScene(scene);
         primary.show();
     }
 

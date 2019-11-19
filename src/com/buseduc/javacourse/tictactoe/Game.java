@@ -1,19 +1,17 @@
 package com.buseduc.javacourse.tictactoe;
 
 import javafx.application.Application;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Game {
 
-    private static final List<Player> PLAYERS = new ArrayList<>();
-    private static Player activePlayer = new Player();
     private static Board board;
     private static GameState gameState;
-    private static int winLine = 10;
+    private static int winLine = 4;
+    private static int boardSize = 4;
 
     static {
-        PLAYERS.add(activePlayer);
+        board = new Board(boardSize);
+        gameState = new GameState(board, winLine);
     }
 
     public Game() {
@@ -21,19 +19,10 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        board = new Board(10);
-        gameState = new GameState(board, winLine);
-        PLAYERS.add(new Computer());
-        activePlayer = PLAYERS.get(0);
+        gameState.setActivePlayer(new Player());
+        gameState.getPlayers().add(gameState.getActivePlayer());
+        gameState.getPlayers().add(Computer.getInstance());
         Application.launch(RenderFX.class, args);
-    }
-
-    public static Player getActivePlayer() {
-        return activePlayer;
-    }
-
-    public static void setActivePlayer(Player activePlayer) {
-        Game.activePlayer = activePlayer;
     }
 
     public static Board getBoard() {
@@ -44,7 +33,4 @@ public class Game {
         return gameState;
     }
 
-    public static List<Player> getPLAYERS() {
-        return PLAYERS;
-    }
 }

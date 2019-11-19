@@ -12,12 +12,25 @@ public class GameState {
     private String endMsg;
     private List<List<Cell>> deadHeats;
     private Board board;
-
+    private Player activePlayer;
+    private List<Player> Players = new ArrayList<>();
 
     public GameState(Board board, int winLineSize) {
         this.board = board;
         this.winLineSize = winLineSize;
         deadHeats = new ArrayList<>();
+    }
+
+    public Player getActivePlayer() {
+        return activePlayer;
+    }
+
+    public void setActivePlayer(Player activePlayer) {
+        this.activePlayer = activePlayer;
+    }
+
+    public List<Player> getPlayers() {
+        return Players;
     }
 
     //PUBLIC. Checks whether given player is a winner
@@ -33,8 +46,6 @@ public class GameState {
 
     //PUBLIC. Checks for dead heat
     public boolean isDeadHeat() {
-        System.out.println(deadHeats.size());
-        System.out.println(getNumOfWinLines());
         checkWholeBoardForDeadHeat();
         return isDeadHeat;
     }
@@ -106,7 +117,7 @@ public class GameState {
                                 .map(Cell::getChip)
                                 .anyMatch(Objects::isNull)
                 );
-        if (isDeadHeat) endMsg = "Dead heat! All cells are filled.";
+        if (isDeadHeat && endMsg == null) endMsg = "Dead heat! All cells are filled.";
         //Checks whether all win positions count equals already made dead heat lines count
         this.isDeadHeat = deadHeats.size() == getNumOfWinLines();
         if (isDeadHeat && endMsg == null) endMsg = "Dead heat! There is no more winning positions.";
@@ -159,11 +170,8 @@ public class GameState {
         int a2 = board.getSize() * 2;
         //Counts sized squares on whole board
         int b = (board.getSize() - winLineSize + 1) * (board.getSize() - winLineSize + 1);
-        System.out.println("a: " + (board.getSize() == winLineSize ? a2 : a));
-        System.out.println("b: " + b);
         //Counts win diagonal lines on whole board
         int c = b * 2;
-        System.out.println("c: " + c);
         return (board.getSize() == winLineSize ? a2 : a) + c;
     }
 

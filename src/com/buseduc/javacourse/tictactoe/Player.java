@@ -5,6 +5,13 @@ import com.buseduc.javacourse.tictactoe.enums.Chip;
 public class Player {
     private Chip chip;
     private String name;
+    private static Board board;
+    private static GameState gameState;
+
+    static {
+        board = Game.getBoard();
+        gameState = Game.getGameState();
+    }
 
     public Player() {
         this.name = setName();
@@ -25,11 +32,11 @@ public class Player {
     }
 
     private String setName() {
-        return "Player " + (Game.getPLAYERS().size() + 1);
+        return "Player " + (gameState.getPlayers().size() + 1);
     }
 
     private Chip setChip() {
-        if (Game.getPLAYERS().size() == 0)
+        if (gameState.getPlayers().size() == 0)
             return Chip.X;
         else return Chip.O;
     }
