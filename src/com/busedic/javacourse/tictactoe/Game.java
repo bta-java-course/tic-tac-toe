@@ -32,17 +32,29 @@ public class Game {
 
     public static void getPlayers() {
         Scanner scanner = new Scanner(System.in);
+        Player newPlayer = new Player();
         while (i < 2) {
             String hint = "Set your name: ";
+            String ifAi = "Check who is playing. You? (Y/N): ";
+            String aiCheck = "";
             String name = "";
             System.out.println(hint);
             if (scanner.hasNext()) {
                 name = scanner.next();
             }
-            Player newPlayer = new Player();
+            System.out.println(ifAi);
+            if (scanner.hasNext()) {
+                aiCheck = scanner.next();
+            }
             newPlayer.setName(name);
+
+            if (aiCheck.contains("Y")) {
+                newPlayer.setAI(false);
+            } else {
+                newPlayer.setAI(true);
+            }
             players[i] = newPlayer;
-            if(Arrays.asList(players).indexOf(newPlayer) == 0){
+            if (Arrays.asList(players).indexOf(newPlayer) == 0) {
                 newPlayer.setX(true);
                 GameState.setCurrentPlayer(newPlayer);
             }

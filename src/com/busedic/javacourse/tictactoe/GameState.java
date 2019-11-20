@@ -1,10 +1,12 @@
 package com.busedic.javacourse.tictactoe;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class GameState {
     private static char[][] theGameState;
     private static Player currentPlayer;
+    private static List<GameState> nextMoves;
 
     public GameState(char[][] gameState) {
         theGameState = gameState;
@@ -91,4 +93,6 @@ public class GameState {
         System.out.println(">>>it's a draw");
         return false;
     }
+
+
 }
