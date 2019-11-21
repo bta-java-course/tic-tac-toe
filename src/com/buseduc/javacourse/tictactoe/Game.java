@@ -1,11 +1,12 @@
 package com.buseduc.javacourse.tictactoe;
 
 import com.buseduc.javacourse.tictactoe.artifacts.Board;
+import com.buseduc.javacourse.tictactoe.core.GameState;
 
 import java.util.Scanner;
 
 public class Game {
-    static Player[] players = new Player[2];
+    public static Player[] players = new Player[2];
     public static final Scanner SCANNER = new Scanner(System.in);
     public static void main(String[] args) {
         getPlayers();

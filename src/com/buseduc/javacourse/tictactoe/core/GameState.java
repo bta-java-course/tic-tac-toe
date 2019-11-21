@@ -1,8 +1,9 @@
 package com.buseduc.javacourse.tictactoe.core;
 
 import com.buseduc.javacourse.tictactoe.Player;
+import com.buseduc.javacourse.tictactoe.artifacts.Board;
 
-import java.util.Arrays;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameState {
@@ -35,8 +36,27 @@ public class GameState {
         this.gameState = gameState;
         this.previous = previous;
         this.currentPlayer = currentPlayer;
-        System.out.println(this);
-        System.out.println(this.previous);
+    }
+
+    public GameOutcome detectOutcome(Board board) {
+        boolean containsEmptyCells = false;
+        for (List<Integer> line : board.getWinIndexes()) {
+            Set<Integer> lines = new HashSet<>();
+            for(Integer nextChip: line) {
+                lines.add(this.gameState[nextChip]);
+                if(!containsEmptyCells && this.gameState[nextChip] == 0) {
+                    containsEmptyCells = true;
+                }
+            }
+            if (lines.size() == 1 && !lines.contains(0)) {
+                if (lines.contains(1)) {
+                    return GameOutcome.WIN_X;
+                } else {
+                    return GameOutcome.WIN_Y;
+                }
+            }
+        }
+        return containsEmptyCells ? GameOutcome.NONE : GameOutcome.RAW;
     }
 
     public int[] getGameState() {

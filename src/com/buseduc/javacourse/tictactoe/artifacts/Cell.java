@@ -22,6 +22,7 @@ public class Cell {
         try {
             i = Integer.parseInt(cellStr.substring(1)) - 1;
         } catch (NumberFormatException ne) {
+            index = -1;
             return;
         }
         if (j >= board.getSize() || i >= board.getSize()) {
