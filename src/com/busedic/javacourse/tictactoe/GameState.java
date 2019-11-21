@@ -1,6 +1,5 @@
 package com.busedic.javacourse.tictactoe;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class GameState {
@@ -79,10 +78,10 @@ public class GameState {
                 return false;
             }
         }
-        return isItDraw();
+        return isItNotDraw();
     }
 
-    private static boolean isItDraw() {
+    private static boolean isItNotDraw() {
         for (int i = 0; i < theGameState.length; i++) {
             for (int j = 0; j < theGameState[i].length; j++) {
                 if (theGameState[i][j] == '\u0000') {

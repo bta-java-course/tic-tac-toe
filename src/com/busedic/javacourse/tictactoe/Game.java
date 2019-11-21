@@ -9,6 +9,7 @@ public class Game {
     public static Player[] players = new Player[2];
     public static Board gameBoard = new Board();
     public static int i = 0;
+    public static String cell = "";
 
 
     public static void main(String[] args) {
@@ -22,10 +23,12 @@ public class Game {
     public static String getCell() {
         Scanner scanner = new Scanner(System.in);
         String hint = "Make your move: ";
-        String cell = "";
         System.out.println(hint);
         if (scanner.hasNext()) {
             cell = scanner.next();
+            if (!cell.matches("[a-c][1-3]")) {
+                getCell();
+            }
         }
         return cell;
     }
@@ -35,7 +38,7 @@ public class Game {
         Player newPlayer = new Player();
         while (i < 2) {
             String hint = "Set your name: ";
-            String ifAi = "Check who is playing. You? (Y/N): ";
+            String ifAi = "Who is playing. You? (Y/N): ";
             String aiCheck = "";
             String name = "";
             System.out.println(hint);
@@ -48,7 +51,7 @@ public class Game {
             }
             newPlayer.setName(name);
 
-            if (aiCheck.contains("Y")) {
+            if (aiCheck.toLowerCase().contains("y")) {
                 newPlayer.setAI(false);
             } else {
                 newPlayer.setAI(true);
