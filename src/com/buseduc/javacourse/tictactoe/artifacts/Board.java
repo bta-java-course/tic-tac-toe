@@ -22,7 +22,7 @@ public class Board {
    }
     public Board(int size, Player player) {
         this.size = size;
-        this.gameState = new GameState(new int[getGameStateSize()], player);
+        this.gameState = new GameState(new int[getGameStateSize()], player,this);
         createWinIndexes();
 
     }
@@ -65,28 +65,39 @@ public class Board {
         Player player = gameState.getCurrentPlayer();
         int[] newState = Arrays.copyOf(gameState.getGameState(), getGameStateSize());
         Cell cell = new Cell(this, "");
-        newState[cell.getCellIndexInState()] = player.isX() ? 1 : 2;
-        GameState newGameState = new GameState(newState, gameState, Game.getAnotherPlayer(player));
-        GameOutcome curOutCome = newGameState.detectOutcome(this);
-        if (GameOutcome.NONE != curOutCome) {
-            String message;
-            switch (curOutCome) {
-                case WIN_X:
-                    message = Game.players[0].getName() + " wins";
-                    break;
-                case WIN_Y:
-                    message = Game.players[1].getName() + " wins";
-                    break;
-                default:
-                    message = "Ничья!";
+        GameState newGameState = null;
+        boolean isDangerousMove = true;
+        while(isDangerousMove) {
+            newState[cell.getCellIndexInState()] = player.isX() ? 1 : 2;
+            newGameState = new GameState(newState, gameState, Game.getAnotherPlayer(player), this);
+            GameOutcome curOutCome = newGameState.detectOutcome(this);
+            if (GameOutcome.NONE != curOutCome) {
+                String message;
+                switch (curOutCome) {
+                    case WIN_X:
+                        message = Game.players[0].getName() + " wins";
+                        break;
+                    case WIN_Y:
+                        message = Game.players[1].getName() + " wins";
+                        break;
+                    default:
+                        message = "Ничья!";
+                }
+                System.out.println(message);
+                return;
             }
-            System.out.println(message);
-            return;
+            newGameState.detectPossibleStates();
+            if (newGameState.maximize(newGameState) == 1) {
+                System.out.println("THIS MOVE IS DANGEROUS!");
+            } else {
+                isDangerousMove = false;
+            }
         }
         gameState = newGameState;
         render();
         move();
     }
+
 
     private void createWinIndexes() {
         List<Integer> diag1 = new ArrayList<>();

@@ -20,22 +20,22 @@ public class Game {
     }
     public static void getPlayers() {
         String name = "";
-        System.out.println("Пользователь 1: имя: ");
+        System.out.println("Игрок 1: имя: ");
         if (SCANNER.hasNext()) {
             name = SCANNER.next();
         }
         boolean isAi = false;
-        System.out.println("Пользователь 1: компьютер? (Y/N): ");
+        System.out.println("Игрок 1: компьютер? (Y/N): ");
         if (SCANNER.hasNext()) {
             isAi = "y".equals(SCANNER.next().toLowerCase());
         }
         players[0] = new Player(name, true, isAi);
-        System.out.println("Пользователь 2: имя: ");
+        System.out.println("Игрок 2: имя: ");
         if (SCANNER.hasNext()) {
             name = SCANNER.next();
         }
         isAi = false;
-        System.out.println("Пользователь 2: компьютер? (Y/N): ");
+        System.out.println("Игрок 2: компьютер? (Y/N): ");
         if (SCANNER.hasNext()) {
             isAi = "y".equals(SCANNER.next().toLowerCase());
         }
