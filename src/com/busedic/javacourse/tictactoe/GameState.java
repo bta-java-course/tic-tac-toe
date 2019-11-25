@@ -15,7 +15,7 @@ public class GameState {
         return theGameState;
     }
 
-    public Player getCurrentPlayer() {
+    public static Player getCurrentPlayer() {
         return currentPlayer;
     }
 

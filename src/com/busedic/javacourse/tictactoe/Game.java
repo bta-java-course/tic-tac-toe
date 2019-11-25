@@ -22,7 +22,7 @@ public class Game {
 
     public static String getCell() {
         Scanner scanner = new Scanner(System.in);
-        String hint = "Make your move: ";
+        String hint = "Make your move, Player " + GameState.getCurrentPlayer().getName()+":";
         System.out.println(hint);
         if (scanner.hasNext()) {
             cell = scanner.next();
