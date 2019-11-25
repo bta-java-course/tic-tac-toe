@@ -90,23 +90,53 @@ public class GameState {
         });
     }
 
-    public int maximize(GameState gameState) {
+    public MiniMaxEntry maximize(GameState gameState) {
         GameOutcome curOutCome = gameState.detectOutcome(this.board);
         if (GameOutcome.NONE != curOutCome) {
             if(GameOutcome.WIN_X == curOutCome) {
-                return currentPlayer.isX() ? 4 : 1;
+                int minimax = currentPlayer.isX() ? 4 : 1;
+                return new MiniMaxEntry(minimax, gameState);
             }
-
         }
-        int maxUtility = 3;
+        MiniMaxEntry maxUtility = null ;
         for (GameState child: possibleStates) {
+            GameOutcome curOutcome = child.detectOutcome(board);
             GameOutcome enemyWins = currentPlayer.isX() ? GameOutcome.WIN_X : GameOutcome.WIN_Y;
-            if (enemyWins == child.detectOutcome(board)) {
-                maxUtility = 1;
+            GameOutcome playerWins = currentPlayer.isX() ? GameOutcome.WIN_Y : GameOutcome.WIN_X;
+            int weight = 0;
+            if (enemyWins == curOutCome) {
+                weight = 1;
+            } else if(playerWins == curOutCome) {
+                weight = 4;
+            } else if (GameOutcome.RAW == curOutCome) {
+                weight = 2;
+            } else {
+                weight = 3;
+            }
+            if (maxUtility == null || weight > maxUtility.getMiniMax()) {
+                maxUtility = new MiniMaxEntry(weight, child);
             }
         }
         return maxUtility;
     }
+    public MiniMaxEntry minimize(GameState gameState) {
+        GameOutcome curOutCome = gameState.detectOutcome(this.board);
+        if (GameOutcome.NONE != curOutCome) {
+            if(GameOutcome.WIN_X == curOutCome) {
+                int minimax = currentPlayer.isX() ? 4 : 1;
+                return new MiniMaxEntry(minimax, gameState);
+            }
+        }
+        MiniMaxEntry maxUtility = new MiniMaxEntry(3, gameState) ;
+        for (GameState child: possibleStates) {
+            GameOutcome enemyWins = currentPlayer.isX() ? GameOutcome.WIN_X : GameOutcome.WIN_Y;
+            if (enemyWins == child.detectOutcome(board)) {
+                maxUtility = new MiniMaxEntry(1, child);
+            }
+        }
+        return maxUtility;
+    }
+
 
 
 

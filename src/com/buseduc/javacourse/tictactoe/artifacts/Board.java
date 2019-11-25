@@ -4,10 +4,12 @@ import com.buseduc.javacourse.tictactoe.Game;
 import com.buseduc.javacourse.tictactoe.Player;
 import com.buseduc.javacourse.tictactoe.core.GameOutcome;
 import com.buseduc.javacourse.tictactoe.core.GameState;
+import com.buseduc.javacourse.tictactoe.core.MiniMaxEntry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class Board {
     static enum Chip {
@@ -61,13 +63,25 @@ public class Board {
         return (int) Math.pow(size, 2);
     }
 
-    public void move() {
+    public void moveAi() {
+        MiniMaxEntry bestMove = gameState.maximize(gameState);
+        this.gameState = bestMove.getFoundGameState();
+        render();
+        if(gameState.getCurrentPlayer().isAi()) {
+            moveAi();
+        } else {
+            moveHuman();
+        }
+    }
+    public void moveHuman() {
         Player player = gameState.getCurrentPlayer();
         int[] newState = Arrays.copyOf(gameState.getGameState(), getGameStateSize());
         Cell cell = new Cell(this, "");
         GameState newGameState = null;
         boolean isDangerousMove = true;
         while(isDangerousMove) {
+            cell.index = -1;
+            newState = Arrays.copyOf(gameState.getGameState(), getGameStateSize());
             newState[cell.getCellIndexInState()] = player.isX() ? 1 : 2;
             newGameState = new GameState(newState, gameState, Game.getAnotherPlayer(player), this);
             GameOutcome curOutCome = newGameState.detectOutcome(this);
@@ -87,15 +101,29 @@ public class Board {
                 return;
             }
             newGameState.detectPossibleStates();
-            if (newGameState.maximize(newGameState) == 1) {
-                System.out.println("THIS MOVE IS DANGEROUS!");
+            boolean nextMove = false;
+            if (newGameState.minimize(newGameState).getMiniMax() == 1) {
+                System.out.println("THIS MOVE IS DANGEROUS! new move? (Y/N)");
+                Scanner scanner = new Scanner(System.in);
+                String answer = scanner.next().toLowerCase();
+                if (!"y".equals(answer)) {
+                    nextMove = true;
+                }
             } else {
+                nextMove = true;
+            }
+            if (nextMove) {
                 isDangerousMove = false;
+                gameState = newGameState;
             }
         }
-        gameState = newGameState;
         render();
-        move();
+        if (gameState.getCurrentPlayer().isAi()) {
+            moveAi();
+        } else {
+            moveHuman();
+        }
+
     }
 
 
