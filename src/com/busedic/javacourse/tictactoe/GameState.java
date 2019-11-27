@@ -196,5 +196,4 @@ public class GameState {
             theGameState[point.x][point.y] = 'o';
         }
     }
-
 }

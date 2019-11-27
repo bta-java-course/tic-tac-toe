@@ -53,9 +53,11 @@ public class Game {
             if (scanner.hasNext()) {
                 name = scanner.next();
             }
-            System.out.println(ifAi);
-            if (scanner.hasNext()) {
-                aiCheck = scanner.next();
+            if (i < 1) {
+                System.out.println(ifAi);
+                if (scanner.hasNext()) {
+                    aiCheck = scanner.next();
+                }
             }
             newPlayer.setName(name);
 
