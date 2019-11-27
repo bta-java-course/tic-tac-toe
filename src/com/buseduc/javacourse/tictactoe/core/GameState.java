@@ -90,28 +90,46 @@ public class GameState {
         });
     }
 
-    public MiniMaxEntry maximize(GameState gameState) {
-        GameOutcome curOutCome = gameState.detectOutcome(this.board);
-        if (GameOutcome.NONE != curOutCome) {
-            if(GameOutcome.WIN_X == curOutCome) {
-                int minimax = currentPlayer.isX() ? 4 : 1;
-                return new MiniMaxEntry(minimax, gameState);
-            }
+    public boolean isEndOfGame(Board board) {
+        GameOutcome outcome = this.detectOutcome(board);
+        if (GameOutcome.NONE == outcome) return false;
+        String message;
+        switch (outcome) {
+            case WIN_X:
+                message = Game.players[0].getName() + " wins";
+                break;
+            case WIN_Y:
+                message = Game.players[1].getName() + " wins";
+                break;
+            default:
+                message = "Ничья!";
         }
+        System.out.println(message);
+        return true;
+    }
+
+    public MiniMaxEntry maximize(GameState gameState, int level) {
         MiniMaxEntry maxUtility = null ;
         for (GameState child: possibleStates) {
-            GameOutcome curOutcome = child.detectOutcome(board);
+            if (level > 2) {
+                return new MiniMaxEntry(3, child);
+            }
+            MiniMaxEntry endpointEntry = minimize(child, level + 1);
+            GameOutcome childOutcome = child.detectOutcome(board);
             GameOutcome enemyWins = currentPlayer.isX() ? GameOutcome.WIN_X : GameOutcome.WIN_Y;
             GameOutcome playerWins = currentPlayer.isX() ? GameOutcome.WIN_Y : GameOutcome.WIN_X;
             int weight = 0;
-            if (enemyWins == curOutCome) {
+            if (enemyWins == childOutcome) {
                 weight = 1;
-            } else if(playerWins == curOutCome) {
+            } else if(playerWins == childOutcome) {
                 weight = 4;
-            } else if (GameOutcome.RAW == curOutCome) {
+            } else if (GameOutcome.RAW == childOutcome) {
                 weight = 2;
             } else {
                 weight = 3;
+            }
+            if (endpointEntry.getMiniMax() > weight) {
+                weight = endpointEntry.getMiniMax();
             }
             if (maxUtility == null || weight > maxUtility.getMiniMax()) {
                 maxUtility = new MiniMaxEntry(weight, child);
@@ -119,22 +137,34 @@ public class GameState {
         }
         return maxUtility;
     }
-    public MiniMaxEntry minimize(GameState gameState) {
-        GameOutcome curOutCome = gameState.detectOutcome(this.board);
-        if (GameOutcome.NONE != curOutCome) {
-            if(GameOutcome.WIN_X == curOutCome) {
-                int minimax = currentPlayer.isX() ? 4 : 1;
-                return new MiniMaxEntry(minimax, gameState);
-            }
-        }
-        MiniMaxEntry maxUtility = new MiniMaxEntry(3, gameState) ;
+    public MiniMaxEntry minimize(GameState gameState, int level) {
+        MiniMaxEntry minUtility = new MiniMaxEntry(3, gameState) ;
         for (GameState child: possibleStates) {
+            if (level > 2) {
+                return new MiniMaxEntry(3, child);
+            }
+            MiniMaxEntry endpointEntry = maximize(child, level + 1);
+            GameOutcome childOutcome = child.detectOutcome(board);
             GameOutcome enemyWins = currentPlayer.isX() ? GameOutcome.WIN_X : GameOutcome.WIN_Y;
-            if (enemyWins == child.detectOutcome(board)) {
-                maxUtility = new MiniMaxEntry(1, child);
+            GameOutcome playerWins = currentPlayer.isX() ? GameOutcome.WIN_Y : GameOutcome.WIN_X;
+            int weight = 0;
+            if (enemyWins == childOutcome) {
+                weight = 1;
+            } else if(playerWins == childOutcome) {
+                weight = 4;
+            } else if (GameOutcome.RAW == childOutcome) {
+                weight = 2;
+            } else {
+                weight = 3;
+            }
+            if (endpointEntry.getMiniMax() < weight) {
+                weight = endpointEntry.getMiniMax();
+            }
+            if (minUtility == null || weight < minUtility.getMiniMax()) {
+                minUtility = new MiniMaxEntry(weight, child);
             }
         }
-        return maxUtility;
+        return minUtility;
     }
 
 

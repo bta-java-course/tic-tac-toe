@@ -64,7 +64,11 @@ public class Board {
     }
 
     public void moveAi() {
-        MiniMaxEntry bestMove = gameState.maximize(gameState);
+        if (gameState.isEndOfGame(this)) {
+            return;
+        }
+
+        MiniMaxEntry bestMove = gameState.maximize(gameState, 0);
         this.gameState = bestMove.getFoundGameState();
         render();
         if(gameState.getCurrentPlayer().isAi()) {
@@ -74,6 +78,9 @@ public class Board {
         }
     }
     public void moveHuman() {
+        if (gameState.isEndOfGame(this)) {
+            return;
+        }
         Player player = gameState.getCurrentPlayer();
         int[] newState = Arrays.copyOf(gameState.getGameState(), getGameStateSize());
         Cell cell = new Cell(this, "");
@@ -85,24 +92,9 @@ public class Board {
             newState[cell.getCellIndexInState()] = player.isX() ? 1 : 2;
             newGameState = new GameState(newState, gameState, Game.getAnotherPlayer(player), this);
             GameOutcome curOutCome = newGameState.detectOutcome(this);
-            if (GameOutcome.NONE != curOutCome) {
-                String message;
-                switch (curOutCome) {
-                    case WIN_X:
-                        message = Game.players[0].getName() + " wins";
-                        break;
-                    case WIN_Y:
-                        message = Game.players[1].getName() + " wins";
-                        break;
-                    default:
-                        message = "Ничья!";
-                }
-                System.out.println(message);
-                return;
-            }
             newGameState.detectPossibleStates();
             boolean nextMove = false;
-            if (newGameState.minimize(newGameState).getMiniMax() == 1) {
+            if (newGameState.minimize(newGameState, 0).getMiniMax() == 1) {
                 System.out.println("THIS MOVE IS DANGEROUS! new move? (Y/N)");
                 Scanner scanner = new Scanner(System.in);
                 String answer = scanner.next().toLowerCase();
@@ -123,7 +115,6 @@ public class Board {
         } else {
             moveHuman();
         }
-
     }
 
 
