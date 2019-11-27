@@ -15,10 +15,12 @@ public class Game {
         gameBoard.render();
 
     }
+
     public static Player getAnotherPlayer(Player player) {
         return player.isX() ? players[1] : players[0];
     }
-    public static void getPlayers() {
+
+    public static void  getPlayers() {
         String name = "";
         System.out.println("Игрок 1: имя: ");
         if (SCANNER.hasNext()) {

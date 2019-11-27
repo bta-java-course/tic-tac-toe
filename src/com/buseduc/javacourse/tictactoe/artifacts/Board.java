@@ -15,6 +15,7 @@ public class Board {
     static enum Chip {
         CROSS, ZERO;
     }
+
     private List<List<Integer>> winIndexes = new ArrayList<>();
     private GameState gameState;
     private int size;
@@ -22,6 +23,7 @@ public class Board {
    public Board(Player player) {
        this(3, player);
    }
+
     public Board(int size, Player player) {
         this.size = size;
         this.gameState = new GameState(new int[getGameStateSize()], player,this);
@@ -59,6 +61,7 @@ public class Board {
         }
         System.out.println("    a   b   c");
     }
+
     public int getGameStateSize() {
         return (int) Math.pow(size, 2);
     }
@@ -73,6 +76,7 @@ public class Board {
             moveHuman();
         }
     }
+
     public void moveHuman() {
         Player player = gameState.getCurrentPlayer();
         int[] newState = Arrays.copyOf(gameState.getGameState(), getGameStateSize());

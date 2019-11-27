@@ -90,6 +90,23 @@ public class GameState {
         });
     }
 
+    public boolean isEndOfGame(GameOutcome outcome){
+        if (GameOutcome.NONE == outcome) {
+            String message;
+            switch (outcome) {
+                case WIN_X:
+                    message = Game.players[0].getName() + " wins";
+                    break;
+                case WIN_Y:
+                    message = Game.players[1].getName() + " wins";
+                    break;
+                default:
+                    message = "Ничья!";
+            }
+            System.out.println(message);
+            return false;
+    }
+
     public MiniMaxEntry maximize(GameState gameState) {
         GameOutcome curOutCome = gameState.detectOutcome(this.board);
         if (GameOutcome.NONE != curOutCome) {
