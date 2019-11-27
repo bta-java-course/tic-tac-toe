@@ -16,13 +16,21 @@ public class Game {
         getPlayers();
         gameBoard.render();
         while (GameState.isGameOn()) {
-            gameBoard.setChip(getCell());
+            if (!GameState.getCurrentPlayer().isAI()) {
+                gameBoard.setChip(getCell());
+            } else {
+                GameState.minimax(0, 1);
+                GameState.placeAMove(GameState.computersMove, players[0]);
+                System.out.println("Computer's move:");
+                gameBoard.render();
+                GameState.changeCurrentPlayer(GameState.getCurrentPlayer());
+            }
         }
     }
 
     public static String getCell() {
         Scanner scanner = new Scanner(System.in);
-        String hint = "Make your move, Player " + GameState.getCurrentPlayer().getName()+":";
+        String hint = "Make your move, Player " + GameState.getCurrentPlayer().getName() + ":";
         System.out.println(hint);
         if (scanner.hasNext()) {
             cell = scanner.next();
@@ -38,7 +46,7 @@ public class Game {
         Player newPlayer = new Player();
         while (i < 2) {
             String hint = "Set your name: ";
-            String ifAi = "Who is playing. You? (Y/N): ";
+            String ifAi = "Who is playing. Computer? (Y/N): ";
             String aiCheck = "";
             String name = "";
             System.out.println(hint);
@@ -52,9 +60,9 @@ public class Game {
             newPlayer.setName(name);
 
             if (aiCheck.toLowerCase().contains("y")) {
-                newPlayer.setAI(false);
-            } else {
                 newPlayer.setAI(true);
+            } else {
+                newPlayer.setAI(false);
             }
             players[i] = newPlayer;
             if (Arrays.asList(players).indexOf(newPlayer) == 0) {

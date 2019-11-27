@@ -23,7 +23,7 @@ public class Board {
     }
 
     public void setChip(String move) {
-        Player player = gameState.getCurrentPlayer();
+        Player player = GameState.getCurrentPlayer();
         String b = move.substring(0, 1);
         int a = Integer.parseInt(move.substring(1, 2));
         switch (b) {
@@ -38,9 +38,9 @@ public class Board {
                 break;
         }
         if (player.isX()) {
-            gameState.getGameState()[a - 1][forMove] = 'x';
+            GameState.getGameState()[a - 1][forMove] = 'x';
         } else {
-            gameState.getGameState()[a - 1][forMove] = 'o';
+            GameState.getGameState()[a - 1][forMove] = 'o';
         }
         gameState.changeCurrentPlayer(player);
         render();
@@ -50,7 +50,7 @@ public class Board {
         for (int i = boardSize - 1; i >= 0; i--) {
             String row = (i + 1) + " | ";
             for (int j = 0; j < boardSize; j++) {
-                row += gameState.getGameState()[i][j] + " | ";
+                row += GameState.getGameState()[i][j] + " | ";
             }
             System.out.println(row);
         }
