@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class GameState {
     private int[] gameState;
     private GameState previous;
+    private boolean isFinal;
     private Player currentPlayer;
     private Board board;
     private List<GameState> possibleStates = new ArrayList<>();
@@ -28,6 +29,14 @@ public class GameState {
 
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
+    }
+
+    public boolean isFinal() {
+        return isFinal;
+    }
+
+    public void setFinal(boolean aFinal) {
+        isFinal = aFinal;
     }
 
     public GameState(int[] gameState, Player currentPlayer, Board board) {
@@ -108,60 +117,69 @@ public class GameState {
         return true;
     }
 
+    private int getScore(GameState gameState) {
+        GameOutcome childOutcome = gameState.detectOutcome(board);
+        GameOutcome enemyWins = currentPlayer.isX() ? GameOutcome.WIN_Y : GameOutcome.WIN_X;
+        GameOutcome playerWins = currentPlayer.isX() ? GameOutcome.WIN_X : GameOutcome.WIN_Y;
+        int score = 3;
+        if (enemyWins == childOutcome) {
+            score = 1;
+            gameState.setFinal(true);
+        } else if(playerWins == childOutcome) {
+            score = 4;
+            gameState.setFinal(true);
+        } else if (GameOutcome.RAW == childOutcome) {
+            score = 2;
+        }
+        return score;
+
+    }
     public MiniMaxEntry maximize(GameState gameState, int level) {
-        MiniMaxEntry maxUtility = null ;
-        for (GameState child: possibleStates) {
-            if (level > 2) {
-                return new MiniMaxEntry(3, child);
+        MiniMaxEntry maxUtility = new MiniMaxEntry(3, gameState) ;
+        gameState.detectPossibleStates();
+        for (GameState child: gameState.possibleStates) {
+            if (level >= 4 ) {
+                return maxUtility;
+            }
+            int score = getScore(child);
+            if (child.isFinal) {
+                return new MiniMaxEntry(score, child);
             }
             MiniMaxEntry endpointEntry = minimize(child, level + 1);
-            GameOutcome childOutcome = child.detectOutcome(board);
-            GameOutcome enemyWins = currentPlayer.isX() ? GameOutcome.WIN_X : GameOutcome.WIN_Y;
-            GameOutcome playerWins = currentPlayer.isX() ? GameOutcome.WIN_Y : GameOutcome.WIN_X;
-            int weight = 0;
-            if (enemyWins == childOutcome) {
-                weight = 1;
-            } else if(playerWins == childOutcome) {
-                weight = 4;
-            } else if (GameOutcome.RAW == childOutcome) {
-                weight = 2;
+            if (endpointEntry.getMiniMax() < score) {
+                score = endpointEntry.getMiniMax();
+            }
+            if (maxUtility == null || score < maxUtility.getMiniMax()) {
+                maxUtility = new MiniMaxEntry(score, child);
             } else {
-                weight = 3;
+                maxUtility.setFoundGameState(child);
             }
-            if (endpointEntry.getMiniMax() > weight) {
-                weight = endpointEntry.getMiniMax();
-            }
-            if (maxUtility == null || weight > maxUtility.getMiniMax()) {
-                maxUtility = new MiniMaxEntry(weight, child);
+            if (level == 0) {
+                System.out.println("MAX SCORE AT THE MOMENT: " + maxUtility.getMiniMax());
             }
         }
         return maxUtility;
     }
+
     public MiniMaxEntry minimize(GameState gameState, int level) {
         MiniMaxEntry minUtility = new MiniMaxEntry(3, gameState) ;
-        for (GameState child: possibleStates) {
-            if (level > 2) {
-                return new MiniMaxEntry(3, child);
+        gameState.detectPossibleStates();
+        for (GameState child: gameState.possibleStates) {
+            if (level >= 4) {
+                return minUtility;
+            }
+            int score = getScore(child);
+            if (child.isFinal) {
+                return new MiniMaxEntry(score, child);
             }
             MiniMaxEntry endpointEntry = maximize(child, level + 1);
-            GameOutcome childOutcome = child.detectOutcome(board);
-            GameOutcome enemyWins = currentPlayer.isX() ? GameOutcome.WIN_X : GameOutcome.WIN_Y;
-            GameOutcome playerWins = currentPlayer.isX() ? GameOutcome.WIN_Y : GameOutcome.WIN_X;
-            int weight = 0;
-            if (enemyWins == childOutcome) {
-                weight = 1;
-            } else if(playerWins == childOutcome) {
-                weight = 4;
-            } else if (GameOutcome.RAW == childOutcome) {
-                weight = 2;
+            if (endpointEntry.getMiniMax() > score) {
+                score = endpointEntry.getMiniMax();
+            }
+            if (minUtility == null || score > minUtility.getMiniMax()) {
+                minUtility = new MiniMaxEntry(score, child);
             } else {
-                weight = 3;
-            }
-            if (endpointEntry.getMiniMax() < weight) {
-                weight = endpointEntry.getMiniMax();
-            }
-            if (minUtility == null || weight < minUtility.getMiniMax()) {
-                minUtility = new MiniMaxEntry(weight, child);
+                minUtility.setFoundGameState(child);
             }
         }
         return minUtility;

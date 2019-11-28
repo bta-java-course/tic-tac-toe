@@ -67,7 +67,6 @@ public class Board {
         if (gameState.isEndOfGame(this)) {
             return;
         }
-
         MiniMaxEntry bestMove = gameState.maximize(gameState, 0);
         this.gameState = bestMove.getFoundGameState();
         render();
@@ -82,33 +81,14 @@ public class Board {
             return;
         }
         Player player = gameState.getCurrentPlayer();
-        int[] newState = Arrays.copyOf(gameState.getGameState(), getGameStateSize());
         Cell cell = new Cell(this, "");
         GameState newGameState = null;
-        boolean isDangerousMove = true;
-        while(isDangerousMove) {
-            cell.index = -1;
-            newState = Arrays.copyOf(gameState.getGameState(), getGameStateSize());
-            newState[cell.getCellIndexInState()] = player.isX() ? 1 : 2;
-            newGameState = new GameState(newState, gameState, Game.getAnotherPlayer(player), this);
-            GameOutcome curOutCome = newGameState.detectOutcome(this);
-            newGameState.detectPossibleStates();
-            boolean nextMove = false;
-            if (newGameState.minimize(newGameState, 0).getMiniMax() == 1) {
-                System.out.println("THIS MOVE IS DANGEROUS! new move? (Y/N)");
-                Scanner scanner = new Scanner(System.in);
-                String answer = scanner.next().toLowerCase();
-                if (!"y".equals(answer)) {
-                    nextMove = true;
-                }
-            } else {
-                nextMove = true;
-            }
-            if (nextMove) {
-                isDangerousMove = false;
-                gameState = newGameState;
-            }
-        }
+        cell.index = -1;
+        int[] newState = Arrays.copyOf(gameState.getGameState(), getGameStateSize());
+        newState[cell.getCellIndexInState()] = player.isX() ? 1 : 2;
+        newGameState = new GameState(newState, gameState, Game.getAnotherPlayer(player), this);
+        newGameState.detectPossibleStates();
+        gameState = newGameState;
         render();
         if (gameState.getCurrentPlayer().isAi()) {
             moveAi();
