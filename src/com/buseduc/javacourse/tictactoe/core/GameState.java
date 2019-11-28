@@ -130,6 +130,7 @@ public class GameState {
             gameState.setFinal(true);
         } else if (GameOutcome.RAW == childOutcome) {
             score = 2;
+            gameState.setFinal(true);
         }
         return score;
 
@@ -138,10 +139,12 @@ public class GameState {
         MiniMaxEntry foundMaximum =  new MiniMaxEntry(4, null);
         gameState.detectPossibleStates();
         for (GameState child: gameState.possibleStates) {
+/*
             if (level >= 4) {
                 foundMaximum = new MiniMaxEntry(3, child);
                 return foundMaximum;
             }
+*/
             int score = getScore(child);
             if (child.isFinal) {
                 return new MiniMaxEntry(score, child);
@@ -157,13 +160,15 @@ public class GameState {
     }
 
     public MiniMaxEntry minimize(GameState gameState, int level) {
-        MiniMaxEntry foundMinimum =  new MiniMaxEntry(4, null);
+        MiniMaxEntry foundMinimum =  new MiniMaxEntry(1, null);
         gameState.detectPossibleStates();
         for (GameState child: gameState.possibleStates) {
+/*
             if (level >= 4) {
                 foundMinimum = new MiniMaxEntry(3, child);
                 return foundMinimum;
             }
+*/
             int score = getScore(child);
             if (child.isFinal) {
                 return new MiniMaxEntry(score, child);

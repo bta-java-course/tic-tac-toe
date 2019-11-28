@@ -11,7 +11,11 @@ public class Game {
     public static void main(String[] args) {
         getPlayers();
         Board gameBoard = new Board(players[0]);
-        gameBoard.moveHuman();
+        if(players[0].isAi()) {
+            gameBoard.moveAi();
+        } else {
+            gameBoard.moveHuman();
+        }
         gameBoard.render();
 
     }
