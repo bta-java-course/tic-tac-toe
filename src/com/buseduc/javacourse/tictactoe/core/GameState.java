@@ -135,54 +135,46 @@ public class GameState {
 
     }
     public MiniMaxEntry maximize(GameState gameState, int level) {
-        MiniMaxEntry maxUtility = new MiniMaxEntry(3, gameState) ;
+        MiniMaxEntry foundMaximum =  new MiniMaxEntry(4, null);
         gameState.detectPossibleStates();
         for (GameState child: gameState.possibleStates) {
-            if (level >= 4 ) {
-                return maxUtility;
+            if (level >= 4) {
+                foundMaximum = new MiniMaxEntry(3, child);
+                return foundMaximum;
             }
             int score = getScore(child);
             if (child.isFinal) {
                 return new MiniMaxEntry(score, child);
             }
             MiniMaxEntry endpointEntry = minimize(child, level + 1);
-            if (endpointEntry.getMiniMax() < score) {
-                score = endpointEntry.getMiniMax();
-            }
-            if (maxUtility == null || score < maxUtility.getMiniMax()) {
-                maxUtility = new MiniMaxEntry(score, child);
-            } else {
-                maxUtility.setFoundGameState(child);
-            }
-            if (level == 0) {
-                System.out.println("MAX SCORE AT THE MOMENT: " + maxUtility.getMiniMax());
+            int maxScore = Math.min(score, endpointEntry.getMiniMax());
+            if (foundMaximum.getFoundGameState() == null || foundMaximum.getMiniMax() < maxScore) {
+                foundMaximum = new MiniMaxEntry(maxScore, child);
             }
         }
-        return maxUtility;
+        return foundMaximum;
+
     }
 
     public MiniMaxEntry minimize(GameState gameState, int level) {
-        MiniMaxEntry minUtility = new MiniMaxEntry(3, gameState) ;
+        MiniMaxEntry foundMinimum =  new MiniMaxEntry(4, null);
         gameState.detectPossibleStates();
         for (GameState child: gameState.possibleStates) {
             if (level >= 4) {
-                return minUtility;
+                foundMinimum = new MiniMaxEntry(3, child);
+                return foundMinimum;
             }
             int score = getScore(child);
             if (child.isFinal) {
                 return new MiniMaxEntry(score, child);
             }
             MiniMaxEntry endpointEntry = maximize(child, level + 1);
-            if (endpointEntry.getMiniMax() > score) {
-                score = endpointEntry.getMiniMax();
-            }
-            if (minUtility == null || score > minUtility.getMiniMax()) {
-                minUtility = new MiniMaxEntry(score, child);
-            } else {
-                minUtility.setFoundGameState(child);
+            int minScore = Math.max(score, endpointEntry.getMiniMax());
+            if (foundMinimum.getFoundGameState() == null || foundMinimum.getMiniMax() > minScore) {
+                foundMinimum = new MiniMaxEntry(minScore, child);
             }
         }
-        return minUtility;
+        return foundMinimum;
     }
 
 
