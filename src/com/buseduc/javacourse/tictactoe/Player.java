@@ -3,8 +3,7 @@ package com.buseduc.javacourse.tictactoe;
 import com.buseduc.javacourse.tictactoe.enums.Chip;
 
 public class Player {
-    private Chip chip;
-    private String name;
+
     private static Board board;
     private static GameState gameState;
 
@@ -13,14 +12,27 @@ public class Player {
         gameState = Game.getGameState();
     }
 
+    private Chip chip;
+    private String name;
+
+    public Player(Chip chip) {
+        this();
+        this.chip = chip;
+    }
+
     public Player() {
         this.name = setName();
         this.chip = setChip();
     }
 
-    public Player(Chip chip) {
-        this();
-        this.chip = chip;
+    private String setName() {
+        return "Player " + (Game.getGameState().getPlayers().size() + 1);
+    }
+
+    private Chip setChip() {
+        if (gameState.getPlayers().size() == 0)
+            return Chip.X;
+        else return Chip.O;
     }
 
     public Chip getChip() {
@@ -29,16 +41,6 @@ public class Player {
 
     public String getName() {
         return name;
-    }
-
-    private String setName() {
-        return "Player " + (gameState.getPlayers().size() + 1);
-    }
-
-    private Chip setChip() {
-        if (gameState.getPlayers().size() == 0)
-            return Chip.X;
-        else return Chip.O;
     }
 
 }

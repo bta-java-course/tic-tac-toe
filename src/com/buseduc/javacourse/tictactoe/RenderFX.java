@@ -9,6 +9,7 @@ import javafx.stage.StageStyle;
 public class RenderFX extends Application {
 
     private static Board board;
+    private static Stage primStage;
 
     static {
         board = Game.getBoard();
@@ -17,16 +18,22 @@ public class RenderFX extends Application {
     public RenderFX() {
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-        Stage primary = primaryStage;
-        primary.initStyle(StageStyle.TRANSPARENT);
-        primary.setResizable(false);
-        primary.setTitle("XO - Gomoku");
+    public static void reloadScene() {
+        board = Game.getBoard();
         Scene scene = new Scene(board.render());
         scene.setFill(Color.TRANSPARENT);
-        primary.setScene(scene);
-        primary.show();
+        primStage.setScene(scene);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        primStage = primaryStage;
+        primStage.initStyle(StageStyle.TRANSPARENT);
+        primStage.setResizable(false);
+        Scene scene = new Scene(board.render());
+        scene.setFill(Color.TRANSPARENT);
+        primStage.setScene(scene);
+        primStage.show();
     }
 
 }

@@ -1,17 +1,22 @@
 package com.buseduc.javacourse.tictactoe;
 
+import com.buseduc.javacourse.tictactoe.enums.Chip;
 import javafx.application.Application;
+
+import java.lang.reflect.Method;
 
 public class Game {
 
+    private static final int WIN_LINE = 5; //Made for this size
+    private static final int BOARD_SIZE = 10; //Made for this size
     private static Board board;
     private static GameState gameState;
-    private static int winLine = 2;
-    private static int boardSize = 10;
+    private static Method level;
+    private static boolean isFirstGame = true;
 
     static {
-        board = new Board(boardSize);
-        gameState = new GameState(board, winLine);
+        board = new Board(BOARD_SIZE);
+        gameState = new GameState(board, WIN_LINE);
     }
 
     public Game() {
@@ -19,10 +24,35 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        gameState.setActivePlayer(new Player());
-        gameState.getPlayers().add(gameState.getActivePlayer());
-        gameState.getPlayers().add(Computer.getInstance());
         Application.launch(RenderFX.class, args);
+    }
+
+    public static void reloadGame() {
+        isFirstGame = false;
+        boolean isTwoPlayers = gameState.isTwoPlayers();
+        board = new Board(BOARD_SIZE);
+        gameState = new GameState(board, WIN_LINE);
+        gameState.setActivePlayer(new Player(Chip.X));
+        gameState.getPlayers().add(gameState.getActivePlayer());
+        if (isTwoPlayers) {
+            gameState.getPlayers().add(new Player());
+            gameState.setTwoPlayers(true);
+        } else {
+            gameState.getPlayers().add(Computer.reloadInstance());
+            gameState.setTwoPlayers(false);
+        }
+        RenderFX.reloadScene();
+        board.getOutPane().getChildren().remove(board.getNewGamePane());
+    }
+
+    public static void newGame() {
+        gameState.setTwoPlayers(false);
+        isFirstGame = false;
+        gameState.getPlayers().clear();
+        gameState.setActivePlayer(null);
+        board = new Board(BOARD_SIZE);
+        gameState = new GameState(board, WIN_LINE);
+        RenderFX.reloadScene();
     }
 
     public static Board getBoard() {
@@ -34,10 +64,23 @@ public class Game {
     }
 
     public static int getWinLine() {
-        return winLine;
+        return WIN_LINE;
     }
 
     public static int getBoardSize() {
-        return boardSize;
+        return BOARD_SIZE;
     }
+
+    public static Method getLevel() {
+        return level;
+    }
+
+    public static void setLevel(Method level) {
+        Game.level = level;
+    }
+
+    public static boolean isIsFirstGame() {
+        return isFirstGame;
+    }
+
 }
